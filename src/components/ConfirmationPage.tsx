@@ -19,7 +19,7 @@ export function ConfirmationPage({ reservation, onBackToDashboard }: Confirmatio
           </div>
           <h1 className="text-slate-800 mb-2">Pieprasījums veiksmīgi iesniegts! 🎉</h1>
           <p className="text-slate-600">
-            Jūsu labklājības dienas pieprasījums ir saņemts un tiek izskatīts
+            Jūsu labbūtības dienas pieprasījums ir saņemts un tiek izskatīts
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export function ConfirmationPage({ reservation, onBackToDashboard }: Confirmatio
                   <Calendar className="h-5 w-5 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">Labklājības dienas datums</p>
+                  <p className="text-sm text-slate-600">Labbūtības dienas datums</p>
                   <p className="text-slate-800">
                     {new Date(reservation.date).toLocaleDateString('lv-LV', {
                       weekday: 'short',

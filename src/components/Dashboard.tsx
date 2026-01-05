@@ -37,7 +37,7 @@ export function Dashboard({ onReserveClick, reservations, userName, onLogout }: 
         <div className="mb-8 flex justify-between items-start">
           <div>
             <h1 className="text-slate-800 mb-2">Laipni lūdzam atpakaļ, {userName}! 👋</h1>
-            <p className="text-slate-600">Jūsu garīgā veselība un labklājība ir svarīga</p>
+            <p className="text-slate-600">Jūsu garīgā veselība un labbūtība ir svarīga</p>
           </div>
           <Button variant="outline" onClick={onLogout} className="gap-2">
             <LogOut className="h-4 w-4" />
@@ -54,7 +54,7 @@ export function Dashboard({ onReserveClick, reservations, userName, onLogout }: 
                   <Heart className="h-6 w-6" />
                   Nepieciešama garīgās veselības diena?
                 </h3>
-                <p className="text-blue-50">Mūsu skola atbalsta jūsu labklājību. Pieprasiet brīvdienu pašaprūpei un atjaunošanai.</p>
+                <p className="text-blue-50">Mūsu skola atbalsta jūsu labbūtību. Pieprasiet brīvdienu pašaprūpei un atjaunošanai.</p>
               </div>
               <Button
                 onClick={onReserveClick}
@@ -73,7 +73,7 @@ export function Dashboard({ onReserveClick, reservations, userName, onLogout }: 
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Clock className="h-5 w-5 text-blue-500" />
-              Jūsu labklājības dienu pieprasījumi
+              Jūsu labbūtības dienu pieprasījumi
             </CardTitle>
             <CardDescription>Sekojiet saviem garīgās veselības dienu pieprasījumiem un to statusam</CardDescription>
           </CardHeader>
@@ -82,7 +82,7 @@ export function Dashboard({ onReserveClick, reservations, userName, onLogout }: 
               <div className="text-center py-8 text-slate-500">
                 <Calendar className="h-12 w-12 mx-auto mb-3 text-slate-300" />
                 <p>Vēl nav pieprasījumu</p>
-                <p className="text-sm">Noklikšķiniet uz pogas augšā, lai pieprasītu labklājības brīvdienu</p>
+                <p className="text-sm">Noklikšķiniet uz pogas augšā, lai pieprasītu labbūtības brīvdienu</p>
               </div>
             ) : (
               <div className="space-y-4">

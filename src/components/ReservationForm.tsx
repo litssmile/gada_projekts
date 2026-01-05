@@ -84,7 +84,7 @@ export function ReservationForm({ onSubmit, onBack }: ReservationFormProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Pieprasīt garīgās veselības un labklājības dienu</CardTitle>
+            <CardTitle>Pieprasīt garīgās veselības un labbūtības dienu</CardTitle>
             <CardDescription>
               Rūpes par savu garīgo veselību ir svarīgas. Iesniedziet savu pieprasījumu un jūs saņemsiet atbildi 24 stundu laikā.
             </CardDescription>
@@ -195,9 +195,9 @@ export function ReservationForm({ onSubmit, onBack }: ReservationFormProps) {
                     <SelectValue placeholder="Izvēlieties iemeslu" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Garīgā veselība un labklājība">Garīgā veselība un labklājība</SelectItem>
+                    <SelectItem value="Garīgā veselība un labbūtība">Garīgā veselība un labbūtība</SelectItem>
                     <SelectItem value="Stresa pārvaldība">Stresa pārvaldība</SelectItem>
-                    <SelectItem value="Personīgā labklājība">Personīgā labklājība</SelectItem>
+                    <SelectItem value="Personīgā labbūtība">Personīgā labbūtība</SelectItem>
                     <SelectItem value="Pašaprūpes diena">Pašaprūpes diena</SelectItem>
                     <SelectItem value="Cits">Cits</SelectItem>
                   </SelectContent>
@@ -234,7 +234,7 @@ export function ReservationForm({ onSubmit, onBack }: ReservationFormProps) {
         <Card className="mt-6 bg-purple-50 border-purple-200">
           <CardContent className="p-4">
             <p className="text-sm text-purple-800">
-              <strong>💙 Atcerieties:</strong> Jūsu garīgā veselība ir svarīga. Mūsu skola atbalsta laika atvēlēšanu pašaprūpei un labklājībai. Jums nav jāsniedz detalizēti paskaidrojumi - jūsu labklājība ir pietiekams iemesls.
+              <strong>💙 Atcerieties:</strong> Jūsu garīgā veselība ir svarīga. Mūsu skola atbalsta laika atvēlēšanu pašaprūpei un labbūtībai. Jums nav jāsniedz detalizēti paskaidrojumi - jūsu labbūtība ir pietiekams iemesls.
             </p>
           </CardContent>
         </Card>

@@ -1,18 +1,16 @@
 import { useState } from 'react';
 import { Login } from './components/Login';
-import { SignUp } from './components/SignUp';
 import { Dashboard } from './components/Dashboard';
 import { ReservationForm, ReservationData } from './components/ReservationForm';
 import { ConfirmationPage } from './components/ConfirmationPage';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner@2.0.3';
 
-type View = 'login' | 'signup' | 'dashboard' | 'form' | 'confirmation';
+type View = 'login' | 'dashboard' | 'form' | 'confirmation';
 
 interface User {
   ssn: string;
   name: string;
-  password: string;
 }
 
 interface Reservation {
@@ -34,46 +32,25 @@ function App() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [currentReservation, setCurrentReservation] = useState<Reservation | null>(null);
 
-  const handleLogin = (ssn: string, name: string, password: string) => {
+  const handleLogin = (ssn: string, name: string) => {
     // Check if user exists
-    const user = users.find(
-      (u) => u.ssn === ssn && u.name === name && u.password === password
-    );
+    const existingUser = users.find((u) => u.ssn === ssn);
 
-    if (user) {
-      setCurrentUser(user);
+    if (existingUser) {
+      // User exists - log them in
+      setCurrentUser(existingUser);
       setIsAuthenticated(true);
       setCurrentView('dashboard');
-      toast.success(`Laipni lūdzam atpakaļ, ${name}!`);
+      toast.success(`Laipni lūdzam atpakaļ, ${existingUser.name}!`);
     } else {
-      toast.error('Nederīgi akreditācijas dati. Lūdzu, pārbaudiet informāciju vai izveidojiet kontu.');
+      // User doesn't exist - create new user automatically
+      const newUser: User = { ssn, name };
+      setUsers([...users, newUser]);
+      setCurrentUser(newUser);
+      setIsAuthenticated(true);
+      setCurrentView('dashboard');
+      toast.success(`Laipni lūdzam, ${name}! Jūsu profils ir izveidots.`);
     }
-  };
-
-  const handleSignUp = (ssn: string, name: string, password: string) => {
-    // Check if user already exists
-    const existingUser = users.find((u) => u.ssn === ssn);
-    if (existingUser) {
-      toast.error('Konts ar šo personas kodu jau eksistē. Lūdzu, piesakieties.');
-      setCurrentView('login');
-      return;
-    }
-
-    // Create new user
-    const newUser: User = { ssn, name, password };
-    setUsers([...users, newUser]);
-    setCurrentUser(newUser);
-    setIsAuthenticated(true);
-    setCurrentView('dashboard');
-    toast.success(`Konts veiksmīgi izveidots! Laipni lūdzam, ${name}!`);
-  };
-
-  const handleSwitchToSignUp = () => {
-    setCurrentView('signup');
-  };
-
-  const handleSwitchToLogin = () => {
-    setCurrentView('login');
   };
 
   const handleLogout = () => {
@@ -110,10 +87,7 @@ function App() {
   return (
     <>
       {currentView === 'login' && (
-        <Login onLogin={handleLogin} onSwitchToSignUp={handleSwitchToSignUp} />
-      )}
-      {currentView === 'signup' && (
-        <SignUp onSignUp={handleSignUp} onSwitchToLogin={handleSwitchToLogin} />
+        <Login onLogin={handleLogin} />
       )}
       {currentView === 'dashboard' && isAuthenticated && (
         <Dashboard 
