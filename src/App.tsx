@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Login } from './components/Login';
 import { Dashboard } from './components/Dashboard';
 import { ReservationForm, ReservationData } from './components/ReservationForm';
 import { ConfirmationPage } from './components/ConfirmationPage';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner@2.0.3';
+import { api } from './lib/api';
 
 type View = 'login' | 'dashboard' | 'form' | 'confirmation';
 
@@ -28,32 +29,71 @@ function App() {
   const [currentView, setCurrentView] = useState<View>('login');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<User[]>([]); // Simulated user database
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [currentReservation, setCurrentReservation] = useState<Reservation | null>(null);
 
-  const handleLogin = (ssn: string, name: string) => {
-    // Check if user exists
-    const existingUser = users.find((u) => u.ssn === ssn);
+  // On load: try restore session
+  useEffect(() => {
+    (async () => {
+      try {
+        const me = await api.me();
+        if (me.user) {
+          setCurrentUser({ ssn: me.user.ssn, name: me.user.name });
+          setIsAuthenticated(true);
+          setCurrentView('dashboard');
+          const r = await api.listReservations();
+          // Map API reservation shape to local type (same fields + id string)
+          const mapped = r.reservations.map((x) => ({
+            id: `REQ-${String(x.id).padStart(3, '0')}`,
+            studentName: x.studentName,
+            className: x.className,
+            date: x.date,
+            reason: x.reason,
+            notes: x.notes,
+            status: x.status,
+            submittedDate: x.submittedDate,
+          }));
+          setReservations(mapped);
+        }
+      } catch {
+        // ignore (backend may be offline)
+      }
+    })();
+  }, []);
 
-    if (existingUser) {
-      // User exists - log them in
-      setCurrentUser(existingUser);
+  const handleLogin = async (ssn: string, name: string) => {
+    try {
+      const res = await api.login(ssn, name);
+      setCurrentUser({ ssn: res.user.ssn, name: res.user.name });
       setIsAuthenticated(true);
       setCurrentView('dashboard');
-      toast.success(`Laipni lūdzam atpakaļ, ${existingUser.name}!`);
-    } else {
-      // User doesn't exist - create new user automatically
-      const newUser: User = { ssn, name };
-      setUsers([...users, newUser]);
-      setCurrentUser(newUser);
-      setIsAuthenticated(true);
-      setCurrentView('dashboard');
-      toast.success(`Laipni lūdzam, ${name}! Jūsu profils ir izveidots.`);
+
+      // load reservations for this user
+      const r = await api.listReservations();
+      const mapped = r.reservations.map((x) => ({
+        id: `REQ-${String(x.id).padStart(3, '0')}`,
+        studentName: x.studentName,
+        className: x.className,
+        date: x.date,
+        reason: x.reason,
+        notes: x.notes,
+        status: x.status,
+        submittedDate: x.submittedDate,
+      }));
+      setReservations(mapped);
+
+      toast.success(`Laipni lūdzam, ${res.user.name}!`);
+    } catch (e) {
+      toast.error(`Neizdevās pieteikties: ${(e as Error).message}`);
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await api.logout();
+    } catch {
+      // ignore
+    }
     setCurrentUser(null);
     setIsAuthenticated(false);
     setCurrentView('login');
@@ -65,18 +105,27 @@ function App() {
     setCurrentView('form');
   };
 
-  const handleFormSubmit = (data: ReservationData) => {
-    const newReservation: Reservation = {
-      id: `REQ-${String(reservations.length + 1).padStart(3, '0')}`,
-      ...data,
-      status: 'pending',
-      submittedDate: new Date().toISOString(),
-    };
+  const handleFormSubmit = async (data: ReservationData) => {
+    try {
+      const created = await api.createReservation(data);
+      const newReservation: Reservation = {
+        id: `REQ-${String(created.reservation.id).padStart(3, '0')}`,
+        studentName: created.reservation.studentName,
+        className: created.reservation.className,
+        date: created.reservation.date,
+        reason: created.reservation.reason,
+        notes: created.reservation.notes,
+        status: created.reservation.status,
+        submittedDate: created.reservation.submittedDate,
+      };
 
-    setReservations([...reservations, newReservation]);
-    setCurrentReservation(newReservation);
-    setCurrentView('confirmation');
-    toast.success('Pieprasījums veiksmīgi iesniegts!');
+      setReservations([newReservation, ...reservations]);
+      setCurrentReservation(newReservation);
+      setCurrentView('confirmation');
+      toast.success('Pieprasījums veiksmīgi iesniegts!');
+    } catch (e) {
+      toast.error(`Neizdevās iesniegt: ${(e as Error).message}`);
+    }
   };
 
   const handleBackToDashboard = () => {

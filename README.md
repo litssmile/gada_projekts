@@ -9,3 +9,13 @@
 
   Run `npm run dev` to start the development server.
   
+## Backend (PHP)
+
+Šim projektam pievienots vienkāršs PHP+MySQL backend `backend/` mapītē.
+
+1) Importē `backend/schema.sql` savā MySQL.
+2) Iestati DB datus `backend/config.php`.
+3) Publicē `backend/` uz lokālā web servera (XAMPP/Laragon).
+4) Frontendam izveido `.env` (var kopēt no `.env.example`) un iestati `VITE_API_BASE` uz backend adresi.
+
+Backend endpointi ir `backend/api/` mapītē.
